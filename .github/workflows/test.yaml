@@ -28,16 +28,16 @@ jobs:
         run: aws sts get-caller-identity
 
 
-      # Uncomment these if you're using Terraform
+      ##Uncomment these if you're using Terraform
 
-      # - name: Setup Terraform
-      #   uses: hashicorp/setup-terraform@v3
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
 
-      # - name: Terraform Init
-      #   run: terraform init
+      - name: Terraform Init
+        run: terraform init
 
-      # - name: Terraform Plan
-      #   run: terraform plan
+      - name: Terraform Plan
+        run: terraform plan
 
-      # - name: Terraform Apply
-      #   run: terraform apply -auto-approve
+      - name: Terraform Apply
+        run: terraform apply -auto-approve
