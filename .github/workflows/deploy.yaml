@@ -615,10 +615,8 @@ jobs:
       # =====================================================
       # 22. CHECK FLASK SERVICE
       # =====================================================
-
       - name: Check Flask service
         run: |
-
           ssh private-server <<'EOF'
 
             set -e
@@ -631,16 +629,12 @@ jobs:
               multicloud-devops \
               --no-pager
 
-
             echo ""
 
-            echo "Testing Flask locally..."
-
-            curl -I \
-              http://127.0.0.1:5000/
+            echo "Testing Flask..."
+            curl -f http://127.0.0.1:5000/
 
           EOF
-
 
       # =====================================================
       # 23. CHECK NGINX
