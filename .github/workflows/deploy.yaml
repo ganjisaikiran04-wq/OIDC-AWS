@@ -80,7 +80,7 @@ jobs:
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v4
         with:
-          role-to-assume: arn:aws:iam::<ACCOUNT_ID>:role/<GITHUB_OIDC_ROLE>
+          role-to-assume: arn:arn:aws:iam::250368537874:role/oidc
           aws-region: ${{ env.AWS_REGION }}
 
 
