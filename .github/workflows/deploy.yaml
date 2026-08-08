@@ -615,26 +615,60 @@ jobs:
       # =====================================================
       # 22. CHECK FLASK SERVICE
       # =====================================================
-      - name: Check Flask service
+      - name: Configure Flask systemd service
         run: |
-          ssh private-server <<'EOF'
+            ssh private-server <<'EOF'
 
             set -e
 
-            echo "===================================="
-            echo "Flask service status"
-            echo "===================================="
+            cd /opt/multicloud-devops
 
-            sudo systemctl status \
-              multicloud-devops \
-              --no-pager
+            echo "Installing application dependencies..."
+            ./venv/bin/pip install -r requirements.txt
 
-            echo ""
+            sudo tee /etc/systemd/system/multicloud-devops.service > /dev/null <<'SERVICE'
+            [Unit]
+            Description=Multi Cloud DevOps Flask Application
+            After=network.target
+
+
+            [Service]
+            User=ec2-user
+            Group=ec2-user
+            WorkingDirectory=/opt/multicloud-devops
+            Environment="PYTHONUNBUFFERED=1"
+
+            ExecStart=/opt/multicloud-devops/venv/bin/gunicorn \
+            --workers 2 \
+            --bind 127.0.0.1:5000 \
+            app:app
+
+            Restart=always
+            RestartSec=5
+
+            [Install]
+
+            WantedBy=multi-user.target
+
+
+            SERVICE
+
+
+            sudo systemctl daemon-reload
+
+            sudo systemctl enable multicloud-devops
+            sudo systemctl restart multicloud-devops
+
+
+            echo "Waiting for Flask..."
+            sleep 3
+
+            sudo systemctl status multicloud-devops --no-pager -l
 
             echo "Testing Flask..."
             curl -f http://127.0.0.1:5000/
 
-          EOF
+            EOF
 
       # =====================================================
       # 23. CHECK NGINX
@@ -663,7 +697,7 @@ jobs:
             curl -I \
               http://127.0.0.1/
 
-          EOF
+            EOF
 
 
       # =====================================================
