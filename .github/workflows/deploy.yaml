@@ -626,30 +626,26 @@ jobs:
             echo "Installing application dependencies..."
             ./venv/bin/pip install -r requirements.txt
 
-            sudo tee /etc/systemd/system/multicloud-devops.service > /dev/null <<'SERVICE'
+            sudo tee /etc/systemd/system/multicloud-devops.service > /dev/null <<'EOF'
             [Unit]
             Description=Multi Cloud DevOps Flask Application
             After=network.target
-
 
             [Service]
             User=ec2-user
             Group=ec2-user
             WorkingDirectory=/opt/multicloud-devops
             Environment="PYTHONUNBUFFERED=1"
+            Environment="PATH=/opt/multicloud-devops/venv/bin"
 
-            ExecStart=/opt/multicloud-devops/venv/bin/gunicorn \
-            --workers 2 \
-            --bind 127.0.0.1:5000 \
-            app:app
+            ExecStart=/opt/multicloud-devops/venv/bin/gunicorn --workers 2 --bind 0.0.0.0:5000 app:app
 
             Restart=always
             RestartSec=5
 
             [Install]
-
             WantedBy=multi-user.target
-
+            EOF
 
             SERVICE
 
