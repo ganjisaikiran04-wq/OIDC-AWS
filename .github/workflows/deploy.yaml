@@ -58,11 +58,8 @@ env:
   AWS_REGION: ap-south-1
 
 jobs:
-
   deploy:
-
     runs-on: ubuntu-latest
-
     steps:
 
       # =====================================================
